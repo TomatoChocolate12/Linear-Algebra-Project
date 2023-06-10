@@ -6,6 +6,9 @@
 \usepackage{xcolor}
 \usepackage{adjustbox}
 \usepackage{tikz}
+\usepackage[utf8]{inputenc}
+\usepackage{float}
+
 % \usepackage{lscape} % for landscape orientation
 
 % Set page dimensions for landscape mode
@@ -20,7 +23,7 @@
 \newcommand{\mat}[1]{\mathbf{#1}}
 
 \title{Linear Algebra - Project}
-\author{Meet Gera \and Yashas \and Rohan}
+\author{Meet Gera \and Yashas S. B. \and Rohan}
 \date{Course Instructor: Dr. Chittraranjan Hens \\  IIIT Hyderabad}
 
 \begin{document}
@@ -163,4 +166,126 @@ Looking to the future, the utilization of bipartite graphs and their eigenvalues
 In conclusion, the study of bipartite graphs and their eigenvalues opens up new avenues for research and practical applications. By delving into the spectral realm of eigenvalues, we can unlock the hidden patterns and structures within bipartite graphs, paving the way for further advancements in graph theory and its applications.
 
 So, let us embrace the power of eigenvalues and embark on a journey to unravel the mysteries of bipartite graphs. With each step, we deepen our understanding of their connectivity, partitioning, symmetry, and dynamics, ultimately enabling us to tackle real-world challenges with confidence and precision.
+
+\section{Clustering in Graphs using Eigenvalues}
+
+    \subsection{What is Clustering?}
+    Clustering is the task of grouping objects in a way such that objects belonging to a certain cluster are more similar to each other than to those objects not in the cluster. It is one of the more important techniques in several data analysis fields like pattern recognition, image compression,  bioinformatics, machine learning and several others. Clustering in graphs using eigenvalues and eigenvectors of the adjacency matrix is a widely used technique known as spectral clustering.
+    
+    \subsection{Spectral Clustering}
+    Spectral clustering is a technique with roots in graph theory, where the approach is used to identify communities of nodes in a graph based on the edges connecting them.
+    Spectral clustering leverages the spectral properties of the graph Laplacian, which is derived from the adjacency matrix, to partition the graph nodes into cohesive clusters.
+    In statistics, spectral clustering techniques make use of the eigenvalues of the similarity matrix of the data to perform dimensionality reduction before clustering in fewer dimensions. The similarity matrix which is provided as the input consists of quantitative assessment of the relative similarity of different pairs of points in the dataset.
+    
+    \subsection{Basic Terminologies used in Spectral Clustering}
+    We will try to explain the basic terminologies in Spectral Clustering using a graph.
+        \begin{figure}[ht]
+        \centering
+            \begin{tikzpicture}[scale=.9,auto=center,every node/.style={circle,fill=blue!20}]
+            \node (a1) at (0, 2) {1};
+            \node (a2) at (0, 0) {2};
+            \node (a3) at (2, 1) {3};
+            \node (a4) at (6, 2) {4};
+            \node (a5) at (5, 0) {5};
+            \node (a6) at (7, 1) {6};
+              \draw (a1)--(a2);
+              \draw (a1)--(a3);
+              \draw (a2)--(a3);
+              \draw (a3)--(a4);
+              \draw (a4)--(a5);
+              \draw (a5)--(a6);
+              \draw (a4)--(a6);
+            \end{tikzpicture}
+            \caption{A simple graph with 6 nodes}
+            \label{fig:graph}
+        \end{figure}
+        \subsubsection{Adjacency and Affinity Matrix $(A)$}
+        The graph (or set of data points) can be represented as an Adjacency Matrix, where the row and column indices represent the nodes, and the entries represent the absence or presence of an edge between the nodes (i.e. if the entry in row 0 and column 1 is 1, it would indicate that node 0 is connected to node 1).
+        An Affinity Matrix is like an Adjacency Matrix, except the value for a pair of points expresses how similar those points are to each other. If pairs of points are very dissimilar then the affinity should be 0. If the points are identical, then the affinity might be 1. In this way, the affinity acts like the weights for the edges on our graph.\\
+        
+        \noindent Below is the Adjacency/Affinity matrix of the graph above:
+        
+        $$ A = 
+    	\begin{bmatrix} 
+    	0 & 1 & 0 & 0 & 1 & 1 \\
+    	1 & 0 & 1 & 0 & 1 & 0 \\
+    	0 & 1 & 0 & 1 & 0 & 0 \\
+     	1 & 0 & 1 & 0 & 1 & 1 \\
+      	0 & 1 & 0 & 1 & 0 & 1 \\
+       	0 & 1 & 1 & 0 & 1 & 0 \\
+    	\end{bmatrix}
+    	\quad
+        $$
+        \subsubsection{Degree Matrix $(D)$}
+        A Degree Matrix is a diagonal matrix, where the degree of a node (i.e. values) of the diagonal is given by the number of edges connected to it. We can also obtain the degree of the nodes by taking the sum of each row in the adjacency matrix.\\
+        
+        \noindent Below is the Degree matrix of the adjacency matrix we defined above:
+        
+        $$ D = 
+    	\begin{bmatrix} 
+    	3 & 0 & 0 & 0 & 0 & 0 \\
+    	0 & 2 & 0 & 0 & 0 & 0 \\
+    	0 & 0 & 3 & 0 & 0 & 0 \\
+     	0 & 0 & 0 & 3 & 0 & 0 \\
+      	0 & 0 & 0 & 0 & 2 & 0 \\
+       	0 & 0 & 0 & 0 & 0 & 3 \\
+    	\end{bmatrix}
+    	\quad
+        $$
+        \subsubsection{Laplacian Matrix $(L)$}
+        This is another representation of the graph/data points, which attributes to the beautiful properties leveraged by Spectral Clustering. One such representation is obtained by subtracting the Adjacency Matrix from the Degree Matrix (i.e. $L = D – A$).\\
+        
+        \noindent Below is the Laplacian matrix of the graph we defined above:
+        
+        $$ L = 
+    	\begin{bmatrix} 
+    	3 & -1 & 0 & -1 & -1 & 0 \\
+    	0 & 2 & -1 & 0 & -1 & 0 \\
+    	-1 & 0 & 3 & 0 & -1 & -1 \\
+     	0 & 0 & -1 & 3 & 0 & -1 \\
+      	-1 & -1 & 0 & 0 & 2 & 0 \\
+       	0 & -1 & 0 & -1 & 0 & 3 \\
+    	\end{bmatrix}
+    	\quad
+        $$
+        \begin{enumerate}
+            \item \textbf{Spectral Gap}: The first non-zero eigenvalue of $L$ is called the Spectral Gap. The Spectral Gap gives us some notion of the density of the graph.
+            \item \textbf{Fiedler Value}: The second eigenvalue of $L$ is called the Fiedler Value, and the corresponding vector is the Fiedler vector. Each value in the Fiedler vector gives us information as to which side of the decision boundary a particular node belongs to.
+            \item Using $L$, we find the first large gap between eigenvalues which generally indicates that the number of eigenvalues before this gap is equal to the number of clusters.
+        \end{enumerate}
+    
+    \subsection{Algorithm for spectral clustering in graphs}
+    The three major steps involved in spectral clustering are: constructing a similarity graph, projecting data onto a lower-dimensional space, and clustering the data. 
+        \begin{enumerate}[label=\textbf{Step \arabic*:}, wide=0pt, leftmargin=!, itemindent=2em]
+            \item Form a distance matrix.
+            \item Transform the distance matrix into an affinity matrix $A$.
+            \item Compute the degree matrix $D$ and the Laplacian matrix $L = D – A$.
+            \item Find eigenvalues and eigenvectors of $L$.
+            \item With the eigenvectors of $k$ largest eigenvalues computed from the previous step form a matrix.
+            \item Normalize the vectors.
+            \item Cluster the data points in k-dimensional space.
+        \end{enumerate}
+    
+    \subsection{Why use spectral clustering over other forms of clustering?}
+        \begin{enumerate}
+            \item \textbf{Flexibility in Handling Complex Data:} Spectral clustering is capable of identifying clusters with complex shapes and structures. It is not limited to spherical or convex clusters like some other algorithms such as k-means. Spectral clustering can handle clusters that are non-linear, disconnected, or overlapping, making it more suitable for a wide range of datasets.
+            \item \textbf{Connectivity-Based Clustering:} Spectral clustering takes into account the connectivity or pairwise relationships between data points. Points that are close in proximity but not directly connected can still be assigned to the same cluster. This allows spectral clustering to capture meaningful relationships between data points and identify clusters based on connectivity patterns.
+            \item \textbf{Scalability with Sparse Graphs:} Spectral clustering can be particularly efficient when working with sparse graphs. The use of sparse matrix representations and efficient algorithms for eigenvalue computation can help reduce computational costs, making it feasible for large-scale datasets.
+        \end{enumerate}.
+        \begin{figure}[H]
+            \centering
+            \includegraphics[scale=0.26]{ProsSpectralClust.png}
+            \caption{Clustering with different clustering algorithms}
+            \label{fig:clustering}
+        \end{figure}
+
+    \subsection{Some cons of Spectral Clustering}
+        \begin{enumerate}
+            \item \textbf{Computational Complexity:}Spectral clustering involves the computation of eigenvalues and eigenvectors of the similarity matrix or Laplacian matrix, which can be computationally expensive for large datasets. The time and memory requirements of spectral clustering can be higher compared to simpler clustering algorithms like k-means.
+            \item \textbf{Parameter Selection:}Spectral clustering requires the selection of various parameters, such as the number of clusters (k) and the type of affinity matrix or similarity measure to use. Choosing the optimal values for these parameters can be challenging and may require domain knowledge or trial-and-error experimentation.
+            \item \textbf{Lack of Robustness to Noise and Outliers:}Spectral clustering is not inherently robust to noise or outliers in the data. Outliers can influence the computation of the affinity matrix and affect the clustering results. Preprocessing steps or outlier detection techniques may be needed to handle noisy data effectively.
+        \end{enumerate}
+
+\section{}
+
 \end{document}
