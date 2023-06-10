@@ -239,12 +239,12 @@ So, let us embrace the power of eigenvalues and embark on a journey to unravel t
         
         $$ L = 
     	\begin{bmatrix} 
-    	3 & -1 & 0 & -1 & -1 & 0 \\
-    	0 & 2 & -1 & 0 & -1 & 0 \\
-    	-1 & 0 & 3 & 0 & -1 & -1 \\
-     	0 & 0 & -1 & 3 & 0 & -1 \\
-      	-1 & -1 & 0 & 0 & 2 & 0 \\
-       	0 & -1 & 0 & -1 & 0 & 3 \\
+    	3 & -1 & 0 & 0 & -1 & -1 \\
+    	-1 & 2 & -1 & 0 & -1 & 0 \\
+    	-1 & -1 & 3 & -1 & 0 & 0 \\
+     	-1 & 0 & -1 & 3 & -1 & -1 \\
+      	0 & -1 & 0 & -1 & 2 & -1 \\
+       	0 & -1 & -1 & 0 & -1 & 3 \\
     	\end{bmatrix}
     	\quad
         $$
@@ -281,9 +281,9 @@ So, let us embrace the power of eigenvalues and embark on a journey to unravel t
 
     \subsection{Some cons of Spectral Clustering}
         \begin{enumerate}
-            \item \textbf{Computational Complexity:}Spectral clustering involves the computation of eigenvalues and eigenvectors of the similarity matrix or Laplacian matrix, which can be computationally expensive for large datasets. The time and memory requirements of spectral clustering can be higher compared to simpler clustering algorithms like k-means.
-            \item \textbf{Parameter Selection:}Spectral clustering requires the selection of various parameters, such as the number of clusters (k) and the type of affinity matrix or similarity measure to use. Choosing the optimal values for these parameters can be challenging and may require domain knowledge or trial-and-error experimentation.
-            \item \textbf{Lack of Robustness to Noise and Outliers:}Spectral clustering is not inherently robust to noise or outliers in the data. Outliers can influence the computation of the affinity matrix and affect the clustering results. Preprocessing steps or outlier detection techniques may be needed to handle noisy data effectively.
+            \item \textbf{Computational Complexity: }Spectral clustering involves the computation of eigenvalues and eigenvectors of the similarity matrix or Laplacian matrix, which can be computationally expensive for large datasets. The time and memory requirements of spectral clustering can be higher compared to simpler clustering algorithms like k-means.
+            \item \textbf{Parameter Selection: }Spectral clustering requires the selection of various parameters, such as the number of clusters (k) and the type of affinity matrix or similarity measure to use. Choosing the optimal values for these parameters can be challenging and may require domain knowledge or trial-and-error experimentation.
+            \item \textbf{Lack of Robustness to Noise and Outliers: }Spectral clustering is not inherently robust to noise or outliers in the data. Outliers can influence the computation of the affinity matrix and affect the clustering results. Preprocessing steps or outlier detection techniques may be needed to handle noisy data effectively.
         \end{enumerate}
 
 \section{}
