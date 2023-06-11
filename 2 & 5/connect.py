@@ -2,9 +2,17 @@ import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
 # Create an adjacency matrix for a sample graph
-adjacency_matrix = np.array([[0, 1, 0],
-                             [1, 0, 0],
-                             [0, 0, 0],])
+adjacency_matrix = np.array([[0,1,1,1,0,0,0,0,0,0,0],
+                             [1,0,0,1,1,0,0,0,0,0,0],
+                             [1,0,0,1,0,1,0,0,0,0,0],
+                             [1,1,1,0,1,1,0,0,0,0,0],
+                             [0,1,0,1,0,1,0,0,0,0,0],
+                             [0,0,1,1,1,0,0,0,0,0,0],
+                             [0,0,0,0,0,0,0,1,1,0,0],
+                             [0,0,0,0,0,0,1,0,1,0,1],
+                             [0,0,0,0,0,0,1,1,0,1,1],
+                             [0,0,0,0,0,0,0,0,1,0,1],
+                             [0,0,0,0,0,0,0,1,1,1,0]])
 
 # Create a graph from the adjacency matrix
 graph = nx.from_numpy_array(adjacency_matrix)
@@ -26,16 +34,17 @@ eigenvalues = np.linalg.eigvals(laplacian_matrix)
 
 # Sort the eigenvalues in ascending order
 sorted_eigenvalues = np.sort(eigenvalues)
-sorted_eigenvalues[0]=0
+
 # Find the second smallest eigenvalue
 second_smallest_eigenvalue = sorted_eigenvalues[1]
-
+sorted_eigenvalues=np.round(sorted_eigenvalues, decimals=3)
 # Check if the second smallest eigenvalue is approximately 0
 if np.isclose(second_smallest_eigenvalue, 0):
     print("The graph is disconnected.")
 else:
     print("The graph is connected.")
 print("Laplacian Eigenvalues:")
+
 print(sorted_eigenvalues)
 indices = np.arange(len(eigenvalues))
 plt.hlines(0, min(indices), max(indices), color='black', linewidth=1)
@@ -48,8 +57,8 @@ plt.ylim(-1, 1)
 plt.vlines(indices, -0.05, 0.05, colors='red')
 
 # Set the x-axis tick labels
-plt.xticks(indices, eigenvalues)
+plt.xticks(indices, sorted_eigenvalues)
 
-plt.xlabel('Eigenvalue')
+plt.xlabel('Eigenvalue(Nearest integer value)')
 plt.title('Eigenvalue Spectrum of 1D Graph')
 plt.show()
